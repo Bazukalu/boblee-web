@@ -2,18 +2,27 @@
 body {
     margin: 0;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background: linear-gradient(135deg, #000000, #0a0a0a);
     font-family: 'Segoe UI', sans-serif;
     transition: background 0.4s ease;
 }
 
-/* Centered Box */
+/* Nadpis nahoře */
+h3 {
+    margin: 0;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Centrum obsahu (tvoje boxy) */
 .center-box {
     width: 600px;
     padding: 50px;
+    margin: 50px auto 0 auto; /* Horizontálně vycentrováno, od top odsazeno 50px */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,6 +31,7 @@ body {
     box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
     transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
+
 
 .center-box:hover {
     transform: scale(1.02);

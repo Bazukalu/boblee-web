@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clicker Game</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { margin:0; padding:0; }
+        h3 { margin:0; padding:20px 0 0 0; text-align:center; }
+        .hidden { display:none !important; }
+        .center-box { width:600px; padding:50px; margin:50px auto; display:flex; flex-direction:column; align-items:center; background:rgba(10,10,10,0.9); border-radius:25px; box-shadow:0 0 50px rgba(255,255,255,0.1); }
+        button.normal { padding:15px 45px; font-size:18px; font-weight:600; border-radius:12px; cursor:pointer; margin:5px 0; }
+        .scoreboard { margin-top:20px; width:100%; }
+        .scoreboard li { list-style:none; font-size:18px; margin:5px 0; padding:5px 10px; border-radius:5px; }
+        .gold { background-color: gold; color:black; }
+        .silver { background-color: silver; color:black; }
+        .bronze { background-color: #cd7f32; color:white; }
+        .other { background-color: #555; color:white; }
+    </style>
+</head>
+<body>
+
+<h3>Welcome to the clicker game</h3>
+
+<div class="center-box">
+
+    <!-- MAIN MENU -->
+    <div id="menuScreen">
+        <button id="startBtn" class="normal">Start Game</button>
+        <div class="row">
+            <input type="checkbox" name="save-to-highscore" id="save-to-highscore">
+            <label for="save-to-highscore">Save to highscore</label>
+
+            <div class="row hidden" id="highscore-settings">
+                <label>Enter your name for highscore</label>
+                <input type="text" id="playerName" placeholder="Your name">
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="gameScreen" class="hidden">
+        <p>Time Left: <span id="timer">10</span>s</p>
+        <button id="clickBtn" class="normal">Click Me!</button>
+        <p>Score: <span id="score">0</span></p>
+    </div>
+
+    <!-- END SCREEN -->
+    <div id="endScreen" class="hidden">
+        <p>Your Score: <span id="finalScore">0</span></p>
+        <button id="restartBtn" class="normal">Restart</button>
+        <button id="clearScoreboardBtn" class="normal">Clear Scoreboard</button>
+        <ul id="scoreboard" class="scoreboard"></ul>
+    </div>
+
+</div>
+
+<script>
+    // Elements
+    const startBtn = document.getElementById('startBtn');
+    const gameScreen = document.getElementById('gameScreen');
+    const menuScreen = document.getElementById('menuScreen');
+    const endScreen = document.getElementById('endScreen');
+    const clickBtn = document.getElementById('clickBtn');
+    const timerEl = document.getElementById('timer');
+    const scoreEl = document.getElementById('score');
+    const finalScoreEl = document.getElementById('finalScore');
+    const restartBtn = document.getElementById('restartBtn');
+    const scoreboardEl = document.getElementById('scoreboard');
+    const clearBtn = document.getElementById('clearScoreboardBtn');
+
+    const checkbox = document.getElementById('save-to-highscore');
+    const highscoreDiv = document.getElementById('highscore-settings');
+    const playerNameInput = document.getElementById('playerName');
+
+    // Toggle name input
+    checkbox.addEventListener('change', () => {
+        highscoreDiv.classList.toggle('hidden', !checkbox.checked);
+    });
+
+    let score = 0;
+    let time = 10;
+    let timerInterval;
+
+    // Start Game
+    startBtn.addEventListener('click', () => {
+        menuScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+
+        score = 0;
+        time = 10;
+        scoreEl.textContent = score;
+        timerEl.textContent = time;
+        clickBtn.disabled = false;
+
+        timerInterval = setInterval(() => {
+            time--;
+            timerEl.textContent = time;
+            if (time <= 0) {
+                clearInterval(timerInterval);
+                clickBtn.disabled = true;
+                endGame();
+            }
+        }, 1000);
+    });
+
+    // Click button
+    clickBtn.addEventListener('click', () => {
+        score++;
+        scoreEl.textContent = score;
+    });
+
+    function endGame() {
+        gameScreen.classList.add('hidden');
+        endScreen.classList.remove('hidden');
+        finalScoreEl.textContent = score;
+
+        if (checkbox.checked && playerNameInput.value.trim()) {
+            saveScore(playerNameInput.value.trim(), score);
+        }
+
+        showScoreboard();
+    }
+
+    function saveScore(name, score) {
+        let highscores = JSON.parse(localStorage.getItem('highscores') || '[]');
+        const existingIndex = highscores.findIndex(entry => entry.name === name);
+
+        if (existingIndex >= 0) {
+            // override if score is higher
+            if (score > highscores[existingIndex].score) {
+                highscores[existingIndex].score = score;
+            }
+        } else {
+            highscores.push({name, score});
+        }
+
+        highscores.sort((a,b) => b.score - a.score);
+        highscores = highscores.slice(0, 10);
+        localStorage.setItem('highscores', JSON.stringify(highscores));
+    }
+
+    function showScoreboard() {
+        scoreboardEl.innerHTML = '';
+        const highscores = JSON.parse(localStorage.getItem('highscores') || '[]');
+        highscores.forEach((entry, index) => {
+            const li = document.createElement('li');
+            if (index === 0) li.classList.add('gold');
+            else if (index === 1) li.classList.add('silver');
+            else if (index === 2) li.classList.add('bronze');
+            else li.classList.add('other');
+            li.textContent = `${index + 1}. ${entry.name} - ${entry.score}`;
+            scoreboardEl.appendChild(li);
+        });
+    }
+
+    // Restart Game
+    restartBtn.addEventListener('click', () => {
+        endScreen.classList.add('hidden');
+        menuScreen.classList.remove('hidden');
+        playerNameInput.value = '';
+        checkbox.checked = false;
+        highscoreDiv.classList.add('hidden');
+    });
+
+    // Clear scoreboard
+    clearBtn.addEventListener('click', () => {
+        localStorage.removeItem('highscores');
+        showScoreboard();
+    });
+
+    // Show scoreboard on load
+    showScoreboard();
+
+    if (localStorage.getItem("userAge") === null) {
+        // Redirect back to age input page if not set
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>
