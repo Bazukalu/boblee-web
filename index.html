@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="center-box">
+    <form id="ageForm">
+        <div class="row">
+            <label>Age will be used for what games you can download</label>
+            <input type="number" name="Age" id="age" placeholder="age" min="9" max="40">
+        </div>
+        <div class="col">
+            <div class="button-container">
+                <button type="reset">Reset</button>
+                <button type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('ageForm');
+    const ageInput = document.getElementById('age');
+    const Dashboard = "games.html";
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedAge = localStorage.getItem('userAge');
+        if (savedAge) {
+
+            window.location.href = Dashboard;
+        }
+    });
+
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const age = ageInput.value;
+        if (age) {
+            localStorage.setItem('userAge', age);
+            window.location.href = Dashboard;
+        } else {
+            alert('Please enter your age.');
+        }
+    });
+
+
+    form.addEventListener('reset', () => {
+        localStorage.removeItem('userAge');
+    });
+</script>
+</body>
+</html>
