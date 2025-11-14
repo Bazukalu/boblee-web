@@ -5,14 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 <div class="center-box">
-    <form id="ageForm">
+    <form id="ageForm" method="POST" action="?">
         <div class="row">
             <label>Age will be used for what games you can download</label>
             <input type="number" name="Age" id="age" placeholder="age" min="9" max="40">
         </div>
+
+        <div class="row">
+            <label>Answer this equation</label>
+            <input type="text" name="captchaAnswer" id="captchaAnswer" placeholder="e.g., 5 + 3 = ?">
+        </div>
+
+        <!-- Google reCAPTCHA widget -->
+        <div class="row">
+            <div class="g-recaptcha" data-sitekey="6LeGuwwsAAAAALahzJcsAPut8aGga2e7RStC3u19"></div>
+        </div>
+
         <div class="col">
             <div class="button-container">
                 <button type="reset">Reset</button>
@@ -25,32 +38,57 @@
 <script>
     const form = document.getElementById('ageForm');
     const ageInput = document.getElementById('age');
+    const captchaInput = document.getElementById('captchaAnswer');
     const Dashboard = "games.html";
 
+    // Example simple math equation
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    const correctAnswer = num1 + num2;
+
+    // Set the equation placeholder
+    captchaInput.placeholder = `What is ${num1} + ${num2}?`;
 
     window.addEventListener('DOMContentLoaded', () => {
         const savedAge = localStorage.getItem('userAge');
         if (savedAge) {
-
             window.location.href = Dashboard;
         }
     });
-
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const age = ageInput.value;
-        if (age) {
-            localStorage.setItem('userAge', age);
-            window.location.href = Dashboard;
-        } else {
-            alert('Please enter your age.');
-        }
-    });
 
+        const age = ageInput.value;
+        const captchaValue = parseInt(captchaInput.value);
+
+        // Check age
+        if (!age) {
+            alert('Please enter your age.');
+            return;
+        }
+
+        // Check math captcha
+        if (captchaValue !== correctAnswer) {
+            alert('Incorrect captcha answer. Please try again.');
+            return;
+        }
+
+        // Check reCAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+            alert('Please complete the reCAPTCHA.');
+            return;
+        }
+
+        // All good
+        localStorage.setItem('userAge', age);
+        window.location.href = Dashboard;
+    });
 
     form.addEventListener('reset', () => {
         localStorage.removeItem('userAge');
+        captchaInput.value = '';
     });
 </script>
 </body>
