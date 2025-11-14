@@ -3,23 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games</title>
+    <title>Survival Max - Download</title>
     <link rel="stylesheet" href="style.css">
 
     <style>
-        body { margin:0; padding:0; font-family: sans-serif; }
-        h3 { margin:0; padding:20px 0 0 0; text-align:center; }
-        .hidden { display:none !important; }
-        .center-box { width:600px; padding:50px; margin:50px auto; display:flex; flex-direction:column; align-items:center; background:rgba(10,10,10,0.9); border-radius:25px; box-shadow:0 0 50px rgba(255,255,255,0.1); }
-        button.normal { padding:15px 45px; font-size:18px; font-weight:600; border-radius:12px; cursor:pointer; margin:5px 0; }
-        .scoreboard { margin-top:20px; width:100%; }
-        .scoreboard li { list-style:none; font-size:18px; margin:5px 0; padding:5px 10px; border-radius:5px; }
-        .gold { background-color: gold; color:black; }
-        .silver { background-color: silver; color:black; }
-        .bronze { background-color: #cd7f32; color:white; }
-        .other { background-color: #555; color:white; }
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background: linear-gradient(135deg, #000000, #0a0a0a);
+        }
 
-        /* Secret code input at bottom-right */
+        h3 {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            text-shadow: 0 0 20px white;
+        }
+
+        .game-list {
+            width: 700px;
+            margin: 50px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .game-item {
+            width: 100%;
+            padding: 25px;
+            background: rgba(15, 15, 15, 0.9);
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(255,255,255,0.08);
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .game-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 50px rgba(255,255,255,0.15);
+        }
+
+        .game-info h2 {
+            margin: 0;
+            color: white;
+            font-size: 32px;
+            text-shadow: 0 0 20px white;
+        }
+
+        .game-info p {
+            margin: 4px 0 0 0;
+            color: #ccc;
+        }
+
+        button.normal {
+            padding: 15px 45px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #ffffff;
+            border: 2px solid #3b82f6;
+            background: rgba(10, 15, 25, 0.8);
+            box-shadow: 0 0 30px #3b82f6, 0 0 50px rgba(59, 130, 246, 0.4) inset;
+            transition: transform 0.2s ease;
+        }
+
+        button.normal:hover {
+            transform: scale(1.15);
+        }
+
+        /* Secret code input */
         #secretCode {
             position: fixed;
             bottom: 20px;
@@ -36,22 +91,38 @@
         #secretCode::placeholder {
             color: #ccc;
         }
+
     </style>
 </head>
 <body>
 
-<h3>Welcome to the Games Dashboard!</h3>
-<div class="center-box">
-    <p>Game content goes here...</p>
+<h3>Game Download Center</h3>
+
+<div class="game-list">
+
+    <div class="game-item">
+        <div class="game-info">
+            <h2>Survival Max</h2>
+            <p>Device: PC</p>
+        </div>
+
+        <!-- Latest GitHub Release Auto-Download -->
+        <a href="https://github.com/Bazukalu/Survival-max/releases/latest/download/Game.zip">
+            <button class="normal">Download Latest</button>
+        </a>
+    </div>
+
 </div>
 
 <input type="text" id="secretCode" name="codes" placeholder="Enter secret codes">
 
-</body>
 <script>
-    // Optional: JS to handle secret code input
-
     const secretInput = document.getElementById('secretCode');
+
+    if (localStorage.getItem("userAge") === null) {
+        // Redirect back to age input page if not set
+        window.location.href = "index.html";
+    }
 
     secretInput.addEventListener('keydown', (e) => {
         if (e.key === "Enter") {
@@ -59,12 +130,14 @@
                 window.location.href = "clicker.html";
             }
         }
+        else if (e.key === "Enter"){
+            if (secretInput.value === "Reset") {
+                localStorage.removeItem("userAge")
+                window.location.href = "index.html";
+            }
+        }
     });
-
-
-    if (localStorage.getItem("userAge") === null) {
-        // Redirect back to age input page if not set
-        window.location.href = "index.html";
-    }
 </script>
+
+</body>
 </html>

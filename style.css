@@ -32,6 +32,42 @@ h3 {
     transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
+.game-list {
+    width: 700px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.game-item {
+    width: 100%;
+    padding: 25px;
+    background: rgba(15, 15, 15, 0.9);
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(255,255,255,0.08);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.game-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 50px rgba(255,255,255,0.15);
+}
+
+.game-info h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.game-info p {
+    margin: 5px 0 0 0;
+    font-size: 16px;
+    color: #ccc;
+}
+
 
 .center-box:hover {
     transform: scale(1.02);
