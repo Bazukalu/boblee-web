@@ -129,13 +129,12 @@
             if (secretInput.value === "I hate clicking") {
                 window.location.href = "clicker.html";
             }
-        }
-        else if (e.key === "Enter"){
-            if (secretInput.value === "Reset") {
-                localStorage.removeItem("userAge")
-                window.location.href = "index.html";
+            else if (secretInput.value === "Reset") {
+                localStorage.removeItem("userAge");
+                window.location.href = "clicker.html";
             }
         }
+
     });
 </script>
 
